@@ -1,4 +1,6 @@
+# plotting.py
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 import numpy as np
 
 class PendulumPlot:
@@ -25,4 +27,31 @@ class PendulumPlot:
         plt.ylabel(r'$\dot{\theta}$ [rad/s]')
         plt.title('Pendulum Phase Plot')
         plt.grid(True)
+        plt.show()
+
+    def animate(self, X_np):
+        theta_traj = X_np[:,0]
+        x_pend = self.l * np.sin(theta_traj)
+        y_pend = -self.l * np.cos(theta_traj)
+
+        fig, ax = plt.subplots(figsize=(5,5))
+        ax.set_xlim(-self.l-0.2, self.l+0.2)
+        ax.set_ylim(-self.l-0.2, 0.2)
+        ax.set_aspect('equal')
+        ax.grid(True)
+        plt.title("Simple Pendulum")
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        line, = ax.plot([], [], 'o-', lw=1)
+
+        def init():
+            line.set_data([], [])
+            return line,
+
+        def update(frame):
+            line.set_data([0, x_pend[frame]], [0, y_pend[frame]])
+            return line,
+
+        ani = FuncAnimation(fig, update, frames=len(theta_traj),
+                            init_func=init, blit=True, interval=self.dt*1000)
         plt.show()
