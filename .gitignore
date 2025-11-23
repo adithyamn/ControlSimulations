@@ -1,8 +1,8 @@
 # Python
 __pycache__/
 *.pyc
-python_deps/
 .venv/
+venv/
 
 # C++ / build
 deps/
