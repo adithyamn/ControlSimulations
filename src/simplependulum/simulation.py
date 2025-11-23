@@ -28,3 +28,7 @@ for i in range(1, num_steps):
 
 print("Simulated trajectory:")
 print(X_np)
+
+#Plot 
+plothelper = PendulumPlot()
+plothelper.plot_phase(X_np)
