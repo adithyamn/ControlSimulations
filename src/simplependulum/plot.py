@@ -39,7 +39,7 @@ class PendulumPlot:
         ax.set_ylim(-self.l-0.2, 0.2)
         ax.set_aspect('equal')
         ax.grid(True)
-        plt.title("Simple Pendulum")
+        plt.title("Simple Pendulum - With Damping")
         ax.set_xticklabels([])
         ax.set_yticklabels([])
         line, = ax.plot([], [], 'o-', lw=1)
