@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+python_deps/
+.venv/
+
+# C++ / build
+deps/
+external/
+build/
+*.o
+*.a
+*.so
