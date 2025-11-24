@@ -7,15 +7,15 @@ import numpy as np
 
 # Parameters
 dt = 0.01
-T = 10.0
+T = 100.0
 x0 = DM([0.0, 0.0])  # initial [theta, theta_dot]
 
-umax = 5.0         # torquelimit
+umax = 100.0         # torquelimit
 Kp = 10.0
 Kd = 2.0
 
 # System 
-pendulum = PendulumDynamics(dt=dt, b=0.1)
+pendulum = PendulumDynamics(dt=dt, b=0.5)
 plotter = PendulumPlot(dt=dt)
 
 # Simulation
@@ -28,7 +28,7 @@ for i in range(1, N_steps):
     theta, theta_dot = x
 
     # Naive PD controller toward upright
-    u = -Kp * (theta - np.pi) - Kd * theta_dot
+    u = -Kp * (theta - np.pi/2) - Kd * theta_dot
        
     # Torque enforcement
     if u > umax:
@@ -42,5 +42,6 @@ for i in range(1, N_steps):
     trajectory[i, :] = x
 
 #Plot results
+#plotter.plot_trajectory(trajectory, T)
 plotter.plot_phase(trajectory)
 plotter.animate(trajectory)
