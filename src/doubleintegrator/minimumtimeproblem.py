@@ -55,6 +55,6 @@ X_opt = sol.value(X)
 U_opt = sol.value(U)
 tf_opt = sol.value(tf)
 
-print("Optimal tf:", tf_opt)
+print("Minimum Time from Start to End :", tf_opt)
 
 
