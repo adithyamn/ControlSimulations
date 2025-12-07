@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
+from pyparsing import line
 
 class PendulumPlot:
     def __init__(self, l=1.0, dt=0.01):
@@ -9,7 +10,9 @@ class PendulumPlot:
         self.dt = dt
 
     def plot_trajectory(self, X_np, T):
-        time = np.arange(0, T+self.dt, self.dt)
+        #time = np.arange(0, T+self.dt, self.dt)
+        N_steps = X_np.shape[0]
+        time = np.arange(N_steps) * self.dt
         plt.figure(figsize=(10,4))
         plt.plot(time, X_np[:,0], label='theta (rad)')
         plt.plot(time, X_np[:,1], label='theta_dot (rad/s)')
@@ -30,19 +33,25 @@ class PendulumPlot:
         plt.show()
 
     def animate(self, X_np):
-        theta_traj = X_np[:,0]
+        theta_traj = X_np[:, 0]
+
+    # Pendulum coordinates
         x_pend = self.l * np.sin(theta_traj)
         y_pend = -self.l * np.cos(theta_traj)
 
-        fig, ax = plt.subplots(figsize=(5,5))
-        ax.set_xlim(-self.l-0.2, self.l+0.2)
-        ax.set_ylim(-self.l-0.2, 0.2)
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Axis ranges: fully contain pendulum both above and below
+        margin = 0.3 * self.l
+        ax.set_xlim(-self.l - margin, self.l + margin)
+        ax.set_ylim(-self.l - margin, self.l + margin)
+
         ax.set_aspect('equal')
         ax.grid(True)
-        plt.title("Simple Pendulum - With Damping")
-        ax.set_xticklabels([])
-        ax.set_yticklabels([])
-        line, = ax.plot([], [], 'o-', lw=1)
+        ax.set_title("Simple Pendulum Animation")
+        ax.set_xticks([])
+        ax.set_yticks([])
+        line, = ax.plot([], [], 'o-', lw=2)
 
         def init():
             line.set_data([], [])
@@ -52,6 +61,10 @@ class PendulumPlot:
             line.set_data([0, x_pend[frame]], [0, y_pend[frame]])
             return line,
 
-        ani = FuncAnimation(fig, update, frames=len(theta_traj),
-                            init_func=init, blit=True, interval=self.dt*1000)
+        ani = FuncAnimation(
+            fig, update, frames=len(theta_traj),
+            init_func=init, blit=True, interval=self.dt * 1000
+        )
+
         plt.show()
+
