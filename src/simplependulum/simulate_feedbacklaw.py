@@ -53,5 +53,38 @@ dp_plotHelper.plot_policy_heatmap(policy, theta_grid, theta_dot_grid)
 dp_plotHelper.plot_value_contours_with_trajectory(J, theta_grid, theta_dot_grid, trajectory)
 dp_plotHelper.plot_value_surface_3d(J, theta_grid, theta_dot_grid, trajectory)
 
+num_rows = len(theta_grid) * len(theta_dot_grid)
+print("Rows in policy.dat:", num_rows)
+print("Rows in value_function.dat:", num_rows)
 
+# Save Sim
+data = []
+for i, th in enumerate(theta_grid):
+    for j, dth in enumerate(theta_dot_grid):
+        data.append([th, dth, policy[i, j]])
 
+np.savetxt("policy.dat", data)
+
+data = []
+for i, th in enumerate(theta_grid):
+    for j, dth in enumerate(theta_dot_grid):
+        data.append([th, dth, J[i, j]])
+
+np.savetxt("value_function.dat", data)
+
+# Extract trajectory components
+th_traj = trajectory[:, 0]
+dth_traj = trajectory[:, 1]
+J_traj = []
+
+# Calculate J along the trajectory for plotting in 3D
+for k in range(len(th_traj)):
+    i = np.searchsorted(theta_grid, wrap_angle(th_traj[k]))
+    j = np.searchsorted(theta_dot_grid, dth_traj[k])
+    i = np.clip(i, 0, J.shape[0]-1)
+    j = np.clip(j, 0, J.shape[1]-1)
+    J_traj.append(J[i, j])
+
+# Save as trajectory.dat
+traj_data = np.column_stack((th_traj, dth_traj, J_traj))
+np.savetxt("trajectory.dat", traj_data)
